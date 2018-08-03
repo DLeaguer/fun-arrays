@@ -101,7 +101,7 @@ datasetWithRoundedDime = newObj2;
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 var sumOfBankBalances = null;
 let total = bal.reduce((accum, next) => {
-  console.log('accum', accum);
+  // console.log('accum', accum);
   return Math.round((accum + Number(next.amount))*100)/100;
 },0);
 
@@ -109,16 +109,26 @@ sumOfBankBalances = total;
 
 /*
   from each of the following states:
-    Wisconsin
-    Illinois
-    Wyoming
-    Ohio
-    Georgia
-    Delaware
+    Wisconsin WI
+    Illinois IL
+    Wyoming WY
+    Ohio OH
+    Georgia GA
+    Delaware DE
   take each `amount` and add 18.9% interest to it rounded to the nearest cent
   and then sum it all up into one value saved to `sumOfInterests`
  */
 var sumOfInterests = null;
+sumOfInterests = bal.filter(obj => {
+  if (obj.state === 'WI' || obj.state === 'IL' || obj.state === 'WY' || obj.state === 'OH' || obj.state === 'GA' || obj.state === 'DE') {
+    // console.log('obj.state', obj.state);
+    // console.log('obj.amount', obj.amount);
+    // console.log(obj.amount*0.189);
+    return Math.round((obj.amount * .189)*100)/100
+  }
+}).reduce((accum, next) => {
+  return Math.round((accum + Number(next.amount*.189))*100)/100;
+},0)
 
 /*
   aggregate the sum of bankBalance amounts
