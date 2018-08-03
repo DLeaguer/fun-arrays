@@ -1,11 +1,27 @@
 var dataset = require('./dataset.json');
+// console.log('json', dataset);
+// console.log('amt', dataset.amount);
+// console.log('bal', dataset.bankBalances);
+// console.log('bal amt', dataset.bankBalances[0].amount);
+let bal = dataset.bankBalances;
+// console.log('bal', bal);
 
+// const getAmount = (elem) => elem.amount > 100000;
 /*
   create an array with accounts from bankBalances that are
   greater than 100000
   assign the resulting new array to `hundredThousandairs`
 */
 var hundredThousandairs = null;
+const highAmts = bal.filter(obj => {
+  // console.log('obj', obj.amount > 100000);
+  // console.log('obj.amount', obj.amount);
+  if (obj.amount > 100000){
+    return obj.amount;
+  }
+});
+
+hundredThousandairs = highAmts;
 
 /*
   DO NOT MUTATE DATA.
@@ -25,6 +41,21 @@ var hundredThousandairs = null;
   assign the resulting new array to `datasetWithRoundedDollar`
 */
 var datasetWithRoundedDollar = null;
+const newObj = bal.map(obj => {
+  let round = 0;
+  if (obj.amount - Math.floor(obj.amount) >= .5) {
+    round = Math.ceil(obj.amount);
+  }else {
+    round = Math.floor(obj.amount);
+  }
+  return {
+    'amount': obj.amount,
+    'state': obj.state,
+    'rounded': round
+  }
+})
+
+datasetWithRoundedDollar = newObj;
 
 /*
   DO NOT MUTATE DATA.
@@ -50,9 +81,31 @@ var datasetWithRoundedDollar = null;
   assign the resulting new array to `roundedDime`
 */
 var datasetWithRoundedDime = null;
+let newObj2 = bal.map(obj => {
+  let round = 0;
+  if (obj.amount*10 - Math.floor(obj.amount*10) >= .5) {
+    round = Math.ceil(obj.amount*10);
+  }else {
+    round = Math.floor(obj.amount*10);
+  }
+  let newround = round/10;
+  return {
+    'amount': obj.amount,
+    'state': obj.state,
+    'roundedDime': newround
+  }
+})
+
+datasetWithRoundedDime = newObj2;
 
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 var sumOfBankBalances = null;
+let total = bal.reduce((accum, next) => {
+  console.log('accum', accum);
+  return Math.round((accum + Number(next.amount))*100)/100;
+},0);
+
+sumOfBankBalances = total;
 
 /*
   from each of the following states:
