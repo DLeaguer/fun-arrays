@@ -129,6 +129,7 @@ sumOfInterests = bal.filter(obj => {
 }).reduce((accum, next) => {
   return Math.round((accum + Number(next.amount*.189))*100)/100;
 },0)
+console.log(sumOfInterests);
 
 /*
   aggregate the sum of bankBalance amounts
@@ -147,6 +148,96 @@ sumOfInterests = bal.filter(obj => {
   )
  */
 var stateSums = null;
+
+// function hashtbl(obj)
+// {
+//   this.length = 0;
+//   this.items = {};
+//   for (var p in obj) {
+//       if (obj.hasOwnProperty(p)) {
+//           this.items[p] = obj[p];
+//           this.length++;
+//       }
+//   }
+  // this.setItem = function(key, value) {
+  //   let previous = undefined;
+  //   if (this.items.hasOwnProperty(key)) {
+  //     previous = this.items[key];
+  //   }
+  //   else {
+  //     this.length++;
+  //   }
+  //   this.items[key] = value;
+  //   return previous;
+  // }
+  // this.getItem = function (key) {
+  //   if (this.items.hasOwnProperty(key)) {
+  //     return this.items[key];
+  //   }
+  //   else {
+  //     return undefined;
+  //   }
+  // }
+  // this.keys = function () {
+  //   let keys = [];
+  //   for (let k in this.items) {
+  //     if (this.items.hasOwnProperty(k)) {
+  //       keys.push(k);
+  //     }
+  //   }
+  //   return keys;
+  // }
+  // this.values = function () {
+  //   let values = [];
+  //   for (let k in this.items) {
+  //     if (this.items.hasOwnProperty(k)) {
+  //       values.push(this.items[k]);
+  //     }
+  //   }
+  //   return values;
+  // }
+  // this.each = function(fn) {
+  //   for (let k in this.items) {
+  //     if (this.items.hasOwnProperty(k)) {
+  //       fn(k, this.items[k]);
+  //     }
+  //   }
+  // }
+  // this.clear = function() {
+  //   this.items = {}
+  //   this.length = 0;
+  // }
+// }
+
+// let h = new hashtbl(bal);
+// console.log(h);
+
+stateSums = bal.filter(obj => {
+  
+  for (let k in obj) {
+    // let amt = Number(Math.round((obj.amount)*10)/10);
+    // console.log('amt', amt);
+    let amt = Number(Math.round((obj[k])*10)/10);
+    console.log('amt', amt);
+    let state = obj[k];
+    let result = {
+      state : amt
+    }
+    console.log('result', result);
+    return result;
+  }
+}).reduce((accum, next) => {
+  for (let k in next.state) {
+    amt = Math.round((accum + Number(next.amount))*10)/10;
+    let state = next[k];
+    let result = {
+      state:next.amt
+    }
+    console.log('2nd result', result);
+    return result;
+  }
+},0)
+console.log(stateSums);
 
 /*
   for all states *NOT* in the following states:
