@@ -141,8 +141,10 @@ console.log(sumOfInterests);
  */
 var stateSums = null;
 
-// object to array
-// done with ES5
+//*******************
+//* object to array *
+//* done with ES5   *
+//*******************
 
 let arr = [];
 
@@ -161,56 +163,96 @@ let toArr = function (obj) {
     let amt = Math.round((obj[i].amount)*100)/100;
     arr.push([obj[i].state,amt]);
   }
-  console.log('');
-  console.log('arr end')
-  console.log(arr);
-  console.log('');
+  // console.log('');
+  // console.log('arr end')
+  // console.log(arr);
+  // console.log('');
   return arr;
 }
+// console.log('');
+// console.log('toArr',toArr(bal));
+toArr(bal);
+
+//*****************************
+//* array of tuples to object *
+//* done with ES5             *
+//*****************************
+
 console.log('');
-console.log('toArr'+toArr(bal));
+console.log('  ***  START OF forEach  ***');
+let stateObj = {};
 
-// array of tuples to object
-// done with ES5
-
-stateSums = arr.reduce(function (obj, currentArray) {
+let toObj = arr.forEach(function (obj) {
   console.log('');
-  // console.log('obj', obj);
-  console.log('currentArray', currentArray);
-  var key = currentArray[0], value = currentArray[1]
-  console.log('key', key);
-  console.log('value', value);
-  obj[key] = value
-  return obj
-}, {})
+  console.log('obj', obj);
+  console.log('obj[0]', obj[0]);
+  console.log('obj[1]', obj[1]);
 
+  if (stateObj[obj[0]] === undefined) {
+    console.log('first time');
+    stateObj[obj[0]] = obj[1];
+  }
+  else {
+    console.log('previous', stateObj[obj[0]]);
+    let accum = stateObj[obj[0]];
+    console.log('accum', accum);
+    console.log('obj[1]', obj[1]);
+    console.log('add more');
+    let sum = accum + obj[1];
+    console.log('sum', sum);
+    let round = Math.round((sum)*100)/100;
+    console.log('round', round);
+    stateObj[obj[0]] = round;
+  }
+  console.log('stateObj', stateObj);
+  return stateObj;
+})
+console.log('');
+stateSums = stateObj;
+console.log('');
 console.log('stateSums')
 console.log(stateSums);
 
-// // object to array
-// // done with ES6
+      // doesn't add to existing object value, 
+      // instead it replaces existing object value
 
-// let arr = [];
-// let toArr = bal.filter(obj => {
-//   let amt = Math.round((obj.amount)*100)/100;
-//   arr.push([obj.state,amt]);
-//   return arr;
-// })
+      // let stateObj = {};
+      // let toObj = function (obj) {
+      //   console.log('');
+      //   console.log('obj', obj);
+      //   for (let i in obj) {
+      //     stateObj[obj[i][0]] = obj[i][1];
+      //   }  
+      //   console.log('stateObj', stateObj);
+      //   return stateObj;
+      // }
+      // console.log('');
+      // console.log(toObj(arr));
 
-// // array of tuples to object
-// // done with ES6
+      // // object to array
+      // // done with ES6
 
-// stateSums = arr.reduce((o, [ key, value ]) => {
-//   o[key] = value
-//   return o
-// }, {})
+      // let arr = [];
+      // let toArr = bal.filter(obj => {
+      //   let amt = Math.round((obj.amount)*100)/100;
+      //   arr.push([obj.state,amt]);
+      //   return arr;
+      // })
 
-// console.log('');
-// console.log('arr end')
-// console.log(arr);
+      // // array of tuples to object
+      // // done with ES6
 
-// console.log('stateSums')
-// console.log(stateSums);
+      // stateSums = arr.reduce((o, [ key, value ]) => {
+      //   o[key] = value
+      //   return o
+      // }, {})
+
+      // console.log('');
+      // console.log('arr end')
+      // console.log(arr);
+
+      // console.log('stateSums')
+      // console.log(stateSums);
 
 /*
   for all states *NOT* in the following states:
