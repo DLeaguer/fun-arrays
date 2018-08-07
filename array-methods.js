@@ -179,39 +179,71 @@ toArr(bal);
 //*****************************
 
 console.log('');
-console.log('  ***  START OF forEach  ***');
+console.log('  ***  START OF .reduce()  ***');
 let stateObj = {};
 
-let toObj = arr.forEach(function (obj) {
+let toObj = arr.reduce((prev, obj, index, next) => {
   console.log('');
+  // console.log('prev', prev);
   console.log('obj', obj);
-  console.log('obj[0]', obj[0]);
-  console.log('obj[1]', obj[1]);
-
+  console.log('  obj[0]', obj[0]);
+  console.log('  obj[1]', obj[1]);
+  console.log('   index', index);
+  // console.log('next', next);
   if (stateObj[obj[0]] === undefined) {
-    console.log('first time');
+    console.log('   FIRST TIME');
     stateObj[obj[0]] = obj[1];
   }
   else {
+    console.log('     ADD MORE');
     console.log('previous', stateObj[obj[0]]);
-    let accum = stateObj[obj[0]];
-    console.log('accum', accum);
-    console.log('obj[1]', obj[1]);
-    console.log('add more');
-    let sum = accum + obj[1];
-    console.log('sum', sum);
+    console.log('+ obj[1]', obj[1]);
+    let sum = stateObj[obj[0]] + obj[1];
+    console.log('  =  sum', sum);
     let round = Math.round((sum)*100)/100;
-    console.log('round', round);
+    console.log('   round', round);
     stateObj[obj[0]] = round;
   }
-  console.log('stateObj', stateObj);
+  console.log('stateObj =')
+  console.log(stateObj);
   return stateObj;
-})
-console.log('');
+}, {})
 stateSums = stateObj;
-console.log('');
-console.log('stateSums')
-console.log(stateSums);
+// console.log('stateSums', stateSums);
+// console.log('toObj', toObj);
+
+// WORKS WITH ForEACH ALSO
+
+// let toObj = arr.forEach(function (obj) {
+//   console.log('');
+//   console.log('obj', obj);
+//   console.log('obj[0]', obj[0]);
+//   console.log('obj[1]', obj[1]);
+
+//   if (stateObj[obj[0]] === undefined) {
+//     console.log('first time');
+//     stateObj[obj[0]] = obj[1];
+//   }
+//   else {
+//     console.log('previous', stateObj[obj[0]]);
+//     let accum = stateObj[obj[0]];
+//     console.log('accum', accum);
+//     console.log('obj[1]', obj[1]);
+//     console.log('add more');
+//     let sum = accum + obj[1];
+//     console.log('sum', sum);
+//     let round = Math.round((sum)*100)/100;
+//     console.log('round', round);
+//     stateObj[obj[0]] = round;
+//   }
+//   console.log('stateObj', stateObj);
+//   return stateObj;
+// })
+// console.log('');
+// stateSums = stateObj;
+// console.log('');
+// console.log('stateSums')
+// console.log(stateSums);
 
       // doesn't add to existing object value, 
       // instead it replaces existing object value
