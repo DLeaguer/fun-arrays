@@ -13,15 +13,13 @@ let bal = dataset.bankBalances;
   assign the resulting new array to `hundredThousandairs`
 */
 var hundredThousandairs = null;
-const highAmts = bal.filter(obj => {
+hundredThousandairs = bal.filter(obj => {
   // console.log('obj', obj.amount > 100000);
   // console.log('obj.amount', obj.amount);
   if (obj.amount > 100000){
     return obj.amount;
   }
 });
-
-hundredThousandairs = highAmts;
 
 /*
   DO NOT MUTATE DATA.
@@ -41,7 +39,7 @@ hundredThousandairs = highAmts;
   assign the resulting new array to `datasetWithRoundedDollar`
 */
 var datasetWithRoundedDollar = null;
-const newObj = bal.map(obj => {
+datasetWithRoundedDollar = bal.map(obj => {
   let round = 0;
   if (obj.amount - Math.floor(obj.amount) >= .5) {
     round = Math.ceil(obj.amount);
@@ -54,8 +52,6 @@ const newObj = bal.map(obj => {
     'rounded': round
   }
 })
-
-datasetWithRoundedDollar = newObj;
 
 /*
   DO NOT MUTATE DATA.
@@ -81,7 +77,7 @@ datasetWithRoundedDollar = newObj;
   assign the resulting new array to `roundedDime`
 */
 var datasetWithRoundedDime = null;
-let newObj2 = bal.map(obj => {
+datasetWithRoundedDime = bal.map(obj => {
   let round = 0;
   if (obj.amount*10 - Math.floor(obj.amount*10) >= .5) {
     round = Math.ceil(obj.amount*10);
@@ -96,16 +92,12 @@ let newObj2 = bal.map(obj => {
   }
 })
 
-datasetWithRoundedDime = newObj2;
-
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 var sumOfBankBalances = null;
-let total = bal.reduce((accum, next) => {
+sumOfBankBalances = bal.reduce((accum, next) => {
   // console.log('accum', accum);
   return Math.round((accum + Number(next.amount))*100)/100;
 },0);
-
-sumOfBankBalances = total;
 
 /*
   from each of the following states:
@@ -149,95 +141,76 @@ console.log(sumOfInterests);
  */
 var stateSums = null;
 
-// function hashtbl(obj)
-// {
-//   this.length = 0;
-//   this.items = {};
-//   for (var p in obj) {
-//       if (obj.hasOwnProperty(p)) {
-//           this.items[p] = obj[p];
-//           this.length++;
-//       }
-//   }
-  // this.setItem = function(key, value) {
-  //   let previous = undefined;
-  //   if (this.items.hasOwnProperty(key)) {
-  //     previous = this.items[key];
-  //   }
-  //   else {
-  //     this.length++;
-  //   }
-  //   this.items[key] = value;
-  //   return previous;
-  // }
-  // this.getItem = function (key) {
-  //   if (this.items.hasOwnProperty(key)) {
-  //     return this.items[key];
-  //   }
-  //   else {
-  //     return undefined;
-  //   }
-  // }
-  // this.keys = function () {
-  //   let keys = [];
-  //   for (let k in this.items) {
-  //     if (this.items.hasOwnProperty(k)) {
-  //       keys.push(k);
-  //     }
-  //   }
-  //   return keys;
-  // }
-  // this.values = function () {
-  //   let values = [];
-  //   for (let k in this.items) {
-  //     if (this.items.hasOwnProperty(k)) {
-  //       values.push(this.items[k]);
-  //     }
-  //   }
-  //   return values;
-  // }
-  // this.each = function(fn) {
-  //   for (let k in this.items) {
-  //     if (this.items.hasOwnProperty(k)) {
-  //       fn(k, this.items[k]);
-  //     }
-  //   }
-  // }
-  // this.clear = function() {
-  //   this.items = {}
-  //   this.length = 0;
-  // }
-// }
+// object to array
+// done with ES5
 
-// let h = new hashtbl(bal);
-// console.log(h);
+let arr = [];
 
-stateSums = bal.filter(obj => {
-  
-  for (let k in obj) {
-    // let amt = Number(Math.round((obj.amount)*10)/10);
-    // console.log('amt', amt);
-    let amt = Number(Math.round((obj[k])*10)/10);
-    console.log('amt', amt);
-    let state = obj[k];
-    let result = {
-      state : amt
-    }
-    console.log('result', result);
-    return result;
+let toArr = function (obj) {
+  console.log('');
+  console.log('obj')
+  console.log(obj);
+  console.log('');
+  console.log('arr start', arr);
+  for (let i in obj) {
+    console.log('');
+    console.log('i', i);
+    console.log('obj[i].state', obj[i].state);
+    console.log('obj[i].amount', obj[i].amount);
+    let state = obj[i].state;
+    let amt = Math.round((obj[i].amount)*100)/100;
+    arr.push([obj[i].state,amt]);
   }
-}).reduce((accum, next) => {
-  for (let k in next.state) {
-    amt = Math.round((accum + Number(next.amount))*10)/10;
-    let state = next[k];
-    let result = {
-      state:next.amt
-    }
-    console.log('2nd result', result);
-    return result;
-  }
-},0)
+  console.log('');
+  console.log('arr end')
+  console.log(arr);
+  console.log('');
+  return arr;
+}
+console.log('');
+console.log('toArr'+toArr(bal));
+
+// array of tuples to object
+// done with ES5
+
+stateSums = arr.reduce(function (obj, currentArray) {
+  console.log('');
+  // console.log('obj', obj);
+  console.log('currentArray', currentArray);
+  var key = currentArray[0], value = currentArray[1]
+  console.log('key', key);
+  console.log('value', value);
+  obj[key] = value
+  return obj
+}, {})
+
+console.log('stateSums')
 console.log(stateSums);
+
+// // object to array
+// // done with ES6
+
+// let arr = [];
+// let toArr = bal.filter(obj => {
+//   let amt = Math.round((obj.amount)*100)/100;
+//   arr.push([obj.state,amt]);
+//   return arr;
+// })
+
+// // array of tuples to object
+// // done with ES6
+
+// stateSums = arr.reduce((o, [ key, value ]) => {
+//   o[key] = value
+//   return o
+// }, {})
+
+// console.log('');
+// console.log('arr end')
+// console.log(arr);
+
+// console.log('stateSums')
+// console.log(stateSums);
 
 /*
   for all states *NOT* in the following states:
