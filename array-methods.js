@@ -13,13 +13,20 @@ let bal = dataset.bankBalances;
   assign the resulting new array to `hundredThousandairs`
 */
 var hundredThousandairs = null;
-hundredThousandairs = bal.filter(obj => {
-  // console.log('obj', obj.amount > 100000);
-  // console.log('obj.amount', obj.amount);
-  if (obj.amount > 100000){
-    return obj.amount;
-  }
-});
+
+hundredThousandairs = bal.filter(obj => 
+  obj.amount > 100000
+) // note: curly brackets and semi-colon will nullify function
+
+// below has unnecessary if/return statement
+
+// hundredThousandairs = bal.filter(obj => {
+//   // console.log('obj', obj.amount > 100000);
+//   // console.log('obj.amount', obj.amount);
+//   if (obj.amount > 100000){
+//     return obj.amount;
+//   }
+// });
 
 /*
   DO NOT MUTATE DATA.
@@ -39,19 +46,30 @@ hundredThousandairs = bal.filter(obj => {
   assign the resulting new array to `datasetWithRoundedDollar`
 */
 var datasetWithRoundedDollar = null;
+
 datasetWithRoundedDollar = bal.map(obj => {
-  let round = 0;
-  if (obj.amount - Math.floor(obj.amount) >= .5) {
-    round = Math.ceil(obj.amount);
-  }else {
-    round = Math.floor(obj.amount);
-  }
-  return {
-    'amount': obj.amount,
-    'state': obj.state,
-    'rounded': round
-  }
+  let round = {};
+  round['amount'] = obj.amount;
+  round['state'] = obj.state;
+  round['rounded'] = Math.round(Number(obj.amount));
+  return round;
 })
+
+// below is making amount round down to .00 cents, add .50 cents, compare to original cents, round original cents up or down
+
+// datasetWithRoundedDollar = bal.map(obj => {
+//   let round = 0;
+//   if (obj.amount - Math.floor(obj.amount) >= .5) {
+//     round = Math.ceil(obj.amount);
+//   }else {
+//     round = Math.floor(obj.amount);
+//   }
+//   return {
+//     'amount': obj.amount,
+//     'state': obj.state,
+//     'rounded': round
+//   }
+// })
 
 /*
   DO NOT MUTATE DATA.
@@ -78,19 +96,29 @@ datasetWithRoundedDollar = bal.map(obj => {
 */
 var datasetWithRoundedDime = null;
 datasetWithRoundedDime = bal.map(obj => {
-  let round = 0;
-  if (obj.amount*10 - Math.floor(obj.amount*10) >= .5) {
-    round = Math.ceil(obj.amount*10);
-  }else {
-    round = Math.floor(obj.amount*10);
-  }
-  let newround = round/10;
-  return {
-    'amount': obj.amount,
-    'state': obj.state,
-    'roundedDime': newround
-  }
+  let round = {};
+  round['amount'] = obj.amount;
+  round['state'] = obj.state;
+  round['roundedDime'] = Math.round((Number(obj.amount))*10)/10;
+  return round;
 })
+
+// below is making amount round down to .00 cents, add .50 cents, compare to original cents, round original cents up or down
+
+// datasetWithRoundedDime = bal.map(obj => {
+//   let round = 0;
+//   if (obj.amount*10 - Math.floor(obj.amount*10) >= .5) {
+//     round = Math.ceil(obj.amount*10);
+//   }else {
+//     round = Math.floor(obj.amount*10);
+//   }
+//   let newround = round/10;
+//   return {
+//     'amount': obj.amount,
+//     'state': obj.state,
+//     'roundedDime': newround
+//   }
+// })
 
 // set sumOfBankBalances to be the sum of all value held at `amount` for each bank object
 var sumOfBankBalances = null;
@@ -111,17 +139,21 @@ sumOfBankBalances = bal.reduce((accum, next) => {
   and then sum it all up into one value saved to `sumOfInterests`
  */
 var sumOfInterests = null;
-sumOfInterests = bal.filter(obj => {
-  if (obj.state === 'WI' || obj.state === 'IL' || obj.state === 'WY' || obj.state === 'OH' || obj.state === 'GA' || obj.state === 'DE') {
-    // console.log('obj.state', obj.state);
-    // console.log('obj.amount', obj.amount);
-    // console.log(obj.amount*0.189);
-    return Math.round((obj.amount * .189)*100)/100
-  }
-}).reduce((accum, next) => {
+sumOfInterests = bal.filter(obj => obj.state === 'WI' || obj.state === 'IL' || obj.state === 'WY' || obj.state === 'OH' || obj.state === 'GA' || obj.state === 'DE').reduce((accum, next) => {
   return Math.round((accum + Number(next.amount*.189))*100)/100;
 },0)
-console.log(sumOfInterests);
+// console.log(sumOfInterests);
+
+// below Math.round unnecessary in .filter(), only needed at the end in .reduce()
+
+// sumOfInterests = bal.filter(obj => {
+//   if (obj.state === 'WI' || obj.state === 'IL' || obj.state === 'WY' || obj.state === 'OH' || obj.state === 'GA' || obj.state === 'DE') {
+//     // console.log('obj.state', obj.state);
+//     // console.log('obj.amount', obj.amount);
+//     // console.log(obj.amount*0.189);
+//     return Math.round((obj.amount * .189)*100)/100
+//   }
+// })
 
 /*
   aggregate the sum of bankBalance amounts
@@ -139,78 +171,99 @@ console.log(sumOfInterests);
     round this number to the nearest 10th of a cent before moving on.
   )
  */
-var stateSums = null;
+// var stateSums = null;
+var stateSums = {};
+
+const stateObj = bal.map(obj => {
+  // console.log('');
+  // console.log('obj', obj);
+  if (!stateSums.hasOwnProperty(obj.state)) {
+    // console.log('first time');
+    // console.log('obj.state', obj.state);
+    // console.log('obj.amount', obj.amount);
+    stateSums[obj.state] = Number(obj.amount);
+  } else {
+    // console.log('add more');
+    // console.log('obj.state', obj.state);
+    // console.log('obj.amount', obj.amount);
+    stateSums[obj.state] = (Math.round((stateSums[obj.state] + Number(obj.amount)) * 100) / 100);
+  }
+  // console.log('stateSums')
+  // console.log(stateSums);
+})
+
 
 //*******************
 //* object to array *
 //* done with ES5   *
 //*******************
 
-let arr = [];
 
-let toArr = function (obj) {
-  console.log('');
-  console.log('obj')
-  console.log(obj);
-  console.log('');
-  console.log('arr start', arr);
-  for (let i in obj) {
-    console.log('');
-    console.log('i', i);
-    console.log('obj[i].state', obj[i].state);
-    console.log('obj[i].amount', obj[i].amount);
-    let state = obj[i].state;
-    let amt = Math.round((obj[i].amount)*100)/100;
-    arr.push([obj[i].state,amt]);
-  }
-  // console.log('');
-  // console.log('arr end')
-  // console.log(arr);
-  // console.log('');
-  return arr;
-}
-// console.log('');
-// console.log('toArr',toArr(bal));
-toArr(bal);
+// let toArr = function (obj) {
+//   let arr = [];
+//   // console.log('');
+//   // console.log('obj')
+//   // console.log(obj);
+//   // console.log('');
+//   // console.log('arr start', arr);
+//   for (let i in obj) {
+//     // console.log('');
+//     // console.log('i', i);
+//     // console.log('obj[i].state', obj[i].state);
+//     // console.log('obj[i].amount', obj[i].amount);
+//     let state = obj[i].state;
+//     let amt = Math.round((obj[i].amount)*100)/100;
+//     arr.push([obj[i].state,amt]);
+//   }
+//   // console.log('');
+//   // console.log('arr end')
+//   // console.log(arr);
+//   // console.log('');
+//   return arr;
+// }
+// // console.log('');
+// // console.log('toArr',toArr(bal));
+// toArr(bal);
+// console.log('toArr', toArr);
 
-//*****************************
-//* array of tuples to object *
-//* done with ES5             *
-//*****************************
+// //*****************************
+// //* array of tuples to object *
+// //* done with ES6             *
+// //*****************************
 
-console.log('');
-console.log('  ***  START OF .reduce()  ***');
-let stateObj = {};
+// // console.log('');
+// // console.log('  ***  START OF .reduce()  ***');
 
-let toObj = arr.reduce((prev, obj, index, next) => {
-  console.log('');
-  // console.log('prev', prev);
-  console.log('obj', obj);
-  console.log('  obj[0]', obj[0]);
-  console.log('  obj[1]', obj[1]);
-  console.log('   index', index);
-  // console.log('next', next);
-  if (stateObj[obj[0]] === undefined) {
-    console.log('   FIRST TIME');
-    stateObj[obj[0]] = obj[1];
-  }
-  else {
-    console.log('     ADD MORE');
-    console.log('previous', stateObj[obj[0]]);
-    console.log('+ obj[1]', obj[1]);
-    let sum = stateObj[obj[0]] + obj[1];
-    console.log('  =  sum', sum);
-    let round = Math.round((sum)*100)/100;
-    console.log('   round', round);
-    stateObj[obj[0]] = round;
-  }
-  console.log('stateObj =')
-  console.log(stateObj);
-  return stateObj;
-}, {})
-stateSums = stateObj;
-// console.log('stateSums', stateSums);
-// console.log('toObj', toObj);
+// let toObj = toArr.reduce((prev, obj, index, next) => {
+//   let stateObj = {};
+//   // console.log('');
+//   // console.log('prev', prev);
+//   // console.log('obj', obj);
+//   // console.log('  obj[0]', obj[0]);
+//   // console.log('  obj[1]', obj[1]);
+//   // console.log('   index', index);
+//   // console.log('next', next);
+//   if (stateObj[obj[0]] === undefined) {
+//     // console.log('   FIRST TIME');
+//     stateObj[obj[0]] = obj[1];
+//   }
+//   else {
+//     // console.log('     ADD MORE');
+//     // console.log('previous', stateObj[obj[0]]);
+//     // console.log('+ obj[1]', obj[1]);
+//     let sum = stateObj[obj[0]] + obj[1];
+//     // console.log('  =  sum', sum);
+//     let round = Math.round((sum)*100)/100;
+//     // console.log('   round', round);
+//     stateObj[obj[0]] = round;
+//   }
+//   // console.log('stateObj =')
+//   // console.log(stateObj);
+//   return stateObj;
+// }, {})
+// stateSums = stateObj;
+// // console.log('stateSums', stateSums);
+// // console.log('toObj', toObj);
 
 // WORKS WITH ForEACH ALSO
 
@@ -305,18 +358,141 @@ stateSums = stateObj;
  */
 var sumOfHighInterests = null;
 
+let highInterests = bal.filter(obj => {
+  // console.logs will nullify function if have no curly brackets
+  if (obj.state!=='WI'&&obj.state!=='IL'&&obj.state!=='WY'&&obj.state!=='OH'&&obj.state!=='GA'&&obj.state!=='DE') {
+    // console.log('obj', obj)
+    return obj
+  }
+})
+
+let stateHiSums = {}
+
+const hiInterestSum = highInterests.map(obj => {
+  // console.log('')
+  // console.log('highInterest obj', obj)
+  if (!stateHiSums.hasOwnProperty(obj.state)) {
+    // console.log('')
+    // console.log('first time stateHiSums')
+    stateHiSums[obj.state] = Math.round((Number(obj.amount)*0.189)*1000)/1000 
+    // console.log('obj.amount', obj.amount)
+    // console.log('stateHiSums')
+    // console.log(stateHiSums)
+  }
+  else {
+    // console.log('');
+    // console.log('add more stateHiSums')
+    // console.log('stateHiSums[obj.state]', stateHiSums[obj.state])
+    stateHiSums[obj.state] = (Math.round((stateHiSums[obj.state] + (Number(obj.amount)*0.189))*1000)/1000)
+    // console.log('obj.amount', obj.amount)
+    // console.log('stateHiSums')
+    // console.log(stateHiSums)
+  }
+  return stateHiSums
+})
+
+const balAmts = Object.values(stateHiSums)
+// console.log('balAmts', balAmts)
+
+const hiIntAmts = balAmts.map(num => {
+  if (num > 50000) {
+    return num;
+  }
+})
+
+// console.log('hiIntAmts', hiIntAmts)
+
+const filterIntAmts = hiIntAmts.filter(arr => arr !== undefined)
+// console.log('filterIntAmts', filterIntAmts)
+
+sumOfHighInterests = filterIntAmts.reduce((accum, next) => {
+  return Math.round((accum + next)*100)/100
+})
+
+
+// console.log('')
+// console.log('sumOfHighInterest')
+// console.log(sumOfHighInterests)
+
 /*
   set `lowerSumStates` to be an array of two letter state
   abbreviations of each state where the sum of amounts
   in the state is less than 1,000,000
  */
 var lowerSumStates = null;
+let lowSumObj = {}
+const lowSumAmts = bal.map(obj => {
+  // console.log('obj', obj);
+  if (!lowSumObj.hasOwnProperty(obj.state)) {
+    lowSumObj[obj.state] = Number(obj.amount)    
+  }
+  else {
+    lowSumObj[obj.state] = lowSumObj[obj.state] + Number(obj.amount)
+  }
+  // return lowSumObj
+})
+// console.log('lowSumObj', lowSumObj)
+
+const lowStates = Object.keys(lowSumObj)
+const lowSums = Object.values(lowSumObj)
+
+let lowMap = lowStates.map((state, index, arr)  => {
+  // console.log('state', state)
+  // console.log('index', index)
+  // console.log('arr', arr)
+  return {
+    state: state,
+    amount: lowSums[index]
+  }
+})
+// console.log('lowMap', lowMap)
+
+let underMil = lowMap.map((obj, index, arr) => {
+  // console.log('obj', obj)
+  // console.log('index', index)
+  // console.log('arr', arr)
+  if (obj.amount < 1000000) {
+    // console.log('underMil obj', obj)
+    return obj.state
+  }
+})
+// console.log('underMil', underMil)
+
+const filterLowStates = underMil.filter(arr => arr !== undefined
+  // console.log('obj', obj)
+  // console.log('index', index)
+  // console.log('arr', arr)
+)
+// console.log('filterLowStates', filterLowStates)
+
+lowerSumStates = filterLowStates
 
 /*
   aggregate the sum of each state into one hash table
   `higherStateSums` should be the sum of all states with totals greater than 1,000,000
  */
 var higherStateSums = null;
+let hiSummedObj = {}
+let hiSumStates = bal.map(obj => {
+  if (!hiSummedObj.hasOwnProperty(obj.state)) {
+    hiSummedObj[obj.state] = Number(obj.amount)
+  }
+  else {
+    hiSummedObj[obj.state] = hiSummedObj[obj.state] + Number(obj.amount)
+  }
+  return hiSummedObj
+})
+// console.log(hiSummedObj)
+
+let hiSummedAmts = Object.values(hiSummedObj)
+
+let hiFilteredAmts = hiSummedAmts.filter(arr => arr > 1000000)
+// console.log('hiFilteredAmts', hiFilteredAmts)
+
+higherStateSums = hiFilteredAmts.reduce((accum, current) => {
+  return accum + current
+},0)
+// console.log('higherStateSums', higherStateSums)
 
 /*
   from each of the following states:
@@ -335,6 +511,45 @@ var higherStateSums = null;
  */
 var areStatesInHigherStateSum = null;
 
+let hiTwoMilObj = {}
+
+let filteredTwoMil = bal.filter(obj => obj.state==='WI'||obj.state==='IL'||obj.state==='WY'||obj.state==='OH'||obj.state==='GA'||obj.state==='DE').map(obj => {
+  if (!hiTwoMilObj.hasOwnProperty(obj.state)) {
+    hiTwoMilObj[obj.state] = Number(obj.amount)
+  }
+  else {
+    hiTwoMilObj[obj.state] = hiTwoMilObj[obj.state] + Number(obj.amount)
+  }
+  return hiTwoMilObj
+})
+
+let hiValues = Object.values(hiTwoMilObj)
+console.log('hiValues', hiValues)
+
+let filterHiValues = hiValues.filter(obj => {
+  // console.log('obj', obj)
+  if (obj > 2550000) {
+    console.log('higher obj', obj)
+    return obj
+  }
+})
+
+let compareHi = filterHiValues.forEach(obj => {
+  // console.log('fe obj', obj)
+  console.log('filterHiValues.length', filterHiValues.length)
+  console.log('hiValues.length', hiValues.length)
+  if (filterHiValues.length === hiValues.length) {
+    return areStatesInHigherStateSum = true
+  }
+  else {
+    return areStatesInHigherStateSum = false
+  }
+})
+console.log('filterHiValues', filterHiValues)
+console.log('hiTwoMilObj', hiTwoMilObj)
+console.log('areStatesInHigherStateSum', areStatesInHigherStateSum)
+
+
 /*
   Stretch Goal && Final Boss
 
@@ -351,6 +566,43 @@ var areStatesInHigherStateSum = null;
  */
 var anyStatesInHigherStateSum = null;
 
+let hiTwoMilObj2 = {}
+
+let filteredTwoMil2 = bal.filter(obj => obj.state==='WI'||obj.state==='IL'||obj.state==='WY'||obj.state==='OH'||obj.state==='GA'||obj.state==='DE').map(obj => {
+  if (!hiTwoMilObj2.hasOwnProperty(obj.state)) {
+    hiTwoMilObj2[obj.state] = Number(obj.amount)
+  }
+  else {
+    hiTwoMilObj2[obj.state] = hiTwoMilObj2[obj.state] + Number(obj.amount)
+  }
+  return hiTwoMilObj2
+})
+
+let hiValues2 = Object.values(hiTwoMilObj2)
+console.log('hiValues2', hiValues2)
+
+let filterHiValues2 = hiValues2.filter(obj => {
+  // console.log('obj', obj)
+  if (obj > 2550000) {
+    console.log('higher obj', obj)
+    return obj
+  }
+})
+
+let compareHi2 = filterHiValues2.forEach(obj => {
+  // console.log('fe obj', obj)
+  console.log('filterHiValues2.length', filterHiValues2.length)
+  console.log('hiValues2.length', hiValues2.length)
+  if (filterHiValues2) {
+    return anyStatesInHigherStateSum = true
+  }
+  else {
+    return anyStatesInHigherStateSum = false
+  }
+})
+console.log('filterHiValues', filterHiValues)
+console.log('hiTwoMilObj', hiTwoMilObj)
+console.log('anyStatesInHigherStateSum', anyStatesInHigherStateSum)
 
 module.exports = {
   hundredThousandairs : hundredThousandairs,
